@@ -1,0 +1,10 @@
+This preject contains libasm.a and libasm_bonus.a libraries :
+
+- ## libasm.a
+    Library functions :
+    1. ft_strlen
+    2. ft_strcpy
+    3. ft_strcmp
+    4. ft_write
+    5. ft_read
+    6. ft_strdup
