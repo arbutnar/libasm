@@ -1,32 +1,29 @@
 ; size_t    ft_strlen(const char *s);
 ; The strlen() function calculates the length of the string pointed to by s, excluding the terminating null byte ('\0').
 
-extern __errno_location
 
 section .text
-global ft_strlen
+    global ft_strlen
+    extern __errno_location
 
 set_errno:
-    mov rax, 14
-    push rax
-    call __errno_location
-    pop qword [rax]
+    mov rax, 14             ; Error code (EFAULT)
+    call __errno_location wrt ..plt   ; Get address of errno variable
+    mov [rax], rax          ; Store error code in errno
     mov rax, -1
     ret
 
-
 ft_strlen:
-    test rdi, rdi
+    test rdi, rdi           ; Check if destination (rdi) is NULL
     jz set_errno
-    xor rcx, rcx        ; Clear counter register
+    xor rcx, rcx            ; Clear counter register
 
-._loop:
-    cmp byte [rdi], 0   ; Check if the current byte is null
-    je ._return         ; Returns if null terminator is found
-    inc rcx             ; Increment counter
-    inc rdi             ; Increment char pointer
-    jmp ._loop
+.loop:
+    cmp byte [rdi + rcx], 0 ; Check if the current byte is null
+    je .return              ; Returns if null terminator is found
+    inc rcx                 ; Increment counter
+    jmp .loop
 
-._return:
+.return:
     mov rax, rcx
-    ret ; Return lenght in rax
+    ret                     ; Return lenght in rax

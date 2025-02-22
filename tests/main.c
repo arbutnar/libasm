@@ -23,14 +23,17 @@ void    test_ft_strcpy()
     /* dest == NULL || src == NULL --> Segmentation fault (core dumped) */
     /* dest_size < src_size *** stack smashing detected ***: terminated --> Aborted (core dumped) */
     int     dsize = 20;
-    char    dest[dsize];
-    char    ft_dest[dsize];
+    char    dest[dsize], ft_dest[dsize];
     char    *src = "testing ft_strcpy";
 
     printf("\n--------TEST FT_STRCPY-------\n");
-    printf("strcpy      |  return  -->  %s\n", strcpy(dest, src));
+    char    *ret = strcpy(dest, src);
+    printf("strcpy      |  dest    -->  %s\n", dest);
+    printf("            |  return  -->  %s\n", ret);
     printf("            -\n");
-    printf("ft_strcpy   |  return  -->  %s\n", ft_strcpy(ft_dest, src));
+    ret = ft_strcpy(ft_dest, src);
+    printf("ft_strcpy   |  dest    -->  %s\n", ft_dest);
+    printf("            |  return  -->  %s\n", ret);
     printf("            |  errno   -->  %d\n", errno);
     errno = 0;
 }
@@ -91,10 +94,10 @@ void    test_ft_read()
 void    test_ft_strdup()
 {
     /* strdup attributes recognized as nonull for gcc */
-    /* dest == NULL --> Segmentation fault (core dumped) */
+    /* src == NULL --> Segmentation fault (core dumped) */
     char        *dest = NULL;
     char        *ft_dest = NULL;
-    const char  *src = "";
+    const char  *src = "testing ft_strdup";
 
     printf("\n--------TEST FT_STRDUP-------\n");
     printf("strdup      |  return  -->  %s\n", (dest = strdup(src)));
@@ -106,16 +109,12 @@ void    test_ft_strdup()
 
 int main()
 {
-    /*Mandatory*/
     test_ft_strlen();
     test_ft_strcpy();
     test_ft_strcmp();
     test_ft_write();
     test_ft_read();
     test_ft_strdup();
-
-    /*Bonus*/
-
 
     return 0;
 }
