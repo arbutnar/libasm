@@ -55,7 +55,7 @@ int ft_atoi_base(const char *str, int str_base) {
 }
 
 int main() {
-    int res = ft_atoi_base("10001", 2);
+    int res = ft_atoi_base("1098", 10);
 
     printf("%d\n", res);
     return (0);
