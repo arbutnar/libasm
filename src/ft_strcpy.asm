@@ -1,39 +1,41 @@
-; char *strcpy(char *dest, const char *src)
-; The  strcpy()  function copies the string pointed to by src, including the terminating null byte ('\0'), to the buffer pointed to by dest.
-; The strings may not overlap, and the destination string dest must be large enough to receive the copy.
-
+; ************************************************************************** ;
+;                                                                            ;
+;                                                        :::      ::::::::   ;
+;   ft_strcpy.asm                                      :+:      :+:    :+:   ;
+;                                                    +:+ +:+         +:+     ;
+;   By: arbutnar <arbutnar@student.42.fr>          +#+  +:+       +#+        ;
+;                                                +#+#+#+#+#+   +#+           ;
+;   Created: 2025/03/29 10:09:44 by arbutnar          #+#    #+#             ;
+;   Updated: 2025/03/29 10:09:44 by arbutnar         ###   ########.fr       ;
+;                                                                            ;
+; ************************************************************************** ;
 
 section .text
     global ft_strcpy
     extern ft_strlen, __errno_location
 
-set_errno:
-    mov rax, 14             ; Error code (EFAULT)
-    call __errno_location wrt ..plt   ; Get address of errno variable
-    mov [rax], rax          ; Store error code in errno
-    mov rax, 0              ; Return NULL (error case)
-    ret
-
+; char  *strcpy(char *dest, const char *src)
+; RDI = dest (pointer to copy string)
+; RSI = src (pointer to copied string, including '\0')
+; RAX = return (pointer to dest)
 ft_strcpy:
-    test rdi, rdi           ; Check if destination (rdi) is NULL
-    jz set_errno
-    test rsi, rsi           ; Check if source (rsi) is NULL
-    jz set_errno
-
-    push rdi                ; Save destination pointer (for return value)
-    mov rdx, rdi            ; Save destination pointer for copying
-    mov rdi, rsi            ; Move source into rdi for strlen
-    call ft_strlen          ; Get length of source
-
-    inc rax                 ; Include null terminator in length
-    mov rcx, rax            ; Store length in rcx (counter for `loop`)
-
-.copy:
-    mov al, [rsi]           ; Load byte from source
-    mov [rdx], al           ; Store byte to destination
-    inc rsi                 ; Increment source pointer
-    inc rdx                 ; Increment destination pointer
-    loop .copy              ; Decrement `rcx`, jump if not zero
-
-    pop rax                 ; Restore original destination pointer (return value)
-    ret                     ; Return
+    test rdi, rdi           ; check if RDI is NULL
+    jz .set_errno_efault    ; if NULL, set EFAULT error
+    test rsi, rsi           ; check if RSI is NULL
+    jz .set_errno_efault    ; if NULL, set EFAULT error
+    mov rax, rdi            ; store destination in rax (for return value)
+    xor rcx, rcx            ; initialize counter to 0
+.loop_through:
+    mov bl, [rsi + rcx]     ; load byte from source into BL
+    mov [rdi + rcx], bl     ; store byte to destination
+    inc rcx                 ; increment counter
+    test bl, bl             ; check if NULL
+    jnz .loop_through       ; if not NULL, continue looping
+    ret                     ; return to caller (RAX == RDI)
+.set_errno_efault:
+    mov rax, 14                     ; error code (EFAULT)
+    push rax                        ; save error code
+    call __errno_location wrt ..plt ; get address of the `errno` variable
+    pop qword [rax]                 ; store error code in errno
+    xor rax, rax                    ; RAX = NULL
+    ret                             ; return to caller

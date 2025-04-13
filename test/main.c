@@ -40,8 +40,8 @@ void    test_ft_strcpy()
 
 void    test_ft_strcmp()
 {
-    char *s1 = "testing strcmp";
-    char *s2 = "testing ft_strcmp";
+    char *s1 = "3testing strcmp";
+    char *s2 = "2testing ft_strcmp";
 
     printf("\n--------TEST FT_STRCMP-------\n");
     printf("strcmp      |  return  -->  %d\n", strcmp(s1, s2));

@@ -60,3 +60,6 @@ int main() {
     printf("%d\n", res);
     return (0);
 }
+
+// '9i6'    "0poi69"  -->   0 * 5
+//                          5 * 5

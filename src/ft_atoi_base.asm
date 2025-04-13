@@ -1,127 +1,168 @@
-; Write a function that converts the string argument str (base N <= 16)
-; to an integer (base 10) and returns it.
+; ************************************************************************** ;
+;                                                                            ;
+;                                                        :::      ::::::::   ;
+;   ft_atoi_base.asm                                   :+:      :+:    :+:   ;
+;                                                    +:+ +:+         +:+     ;
+;   By: arbutnar <arbutnar@student.42.fr>          +#+  +:+       +#+        ;
+;                                                +#+#+#+#+#+   +#+           ;
+;   Created: 2025/03/29 10:09:44 by arbutnar          #+#    #+#             ;
+;   Updated: 2025/03/29 10:09:44 by arbutnar         ###   ########.fr       ;
+;                                                                            ;
+; ************************************************************************** ;
 
-; The characters recognized in the input are: 0123456789abcdef
-; Those are, of course, to be trimmed according to the requested base. For
-; example, base 4 recognizes "0123" and base 16 recognizes "0123456789abcdef".
-; Uppercase letters must also be recognized: "12fdb3" is the same as "12FDB3".
-
-; Minus signs ('-') are interpreted only if they are the first character of the
-; string.
-
-; Your function must be declared as follows:
-; int  ft_atoi_base(const char *str, int str_base);
-
+default rel     ; address type for memory operands to be RIP-relative instead of absolute addressing
 
 section .data
-    lbase    DB '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 0
-    ubase    DB '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 0
+    sign        DB 1
+    base_len    DB 0
+    res         DB 0
 
 section .text
     global ft_atoi_base
+    extern __errno_location
 
-; ft_atoi_base(const char *str, int str_base)
-; rdi = str
-; rsi = str_base
-ft_atoi_base:
-    cmp rdi, 0
-    je .early_ret
-    cmp rsi, 2
-    jl  .early_ret
-    cmp rsi, 16
-    jg  .early_ret
-    mov rax, 0              ; initialize return value
-.check_neg_sign:
-    cmp byte [rdi], '-'     ; check if return will be negative
-    test    rdi, rdi
-    jnz .check_plus_sign
-    neg rax
-    inc rdi
-    jmp .check_plus_sign
-.skip_sign:
-    inc rdi
-.check_plus_sign:
-    cmp byte [rdi], '+'          ; skip initial '+' characters
-    je  .skip_sign
-    jmp .check_cond
-.continue:
-    inc rdi
-.check_cond:
-    cmp byte [rdi], 0
-    jne .loop_through
-    ret                     ; return (rax)
-.loop_through:
-    cmp byte [rdi], 9       ; '\t' (Tab)
-    je  .continue
-    cmp byte [rdi], 10      ; '\n' (Newline)
-    je  .continue
-    cmp byte [rdi], 11      ; '\v' (Vertical tab)
-    je  .continue
-    cmp byte [rdi], 12      ; '\f' (Form feed)
-    je  .continue
-    cmp byte [rdi], 13      ; '\r' (Carriage return)
-    je  .continue
-    cmp byte [rdi], 32      ; ' ' (Space)
-    je  .continue
-    mov rcx, 0
-    jmp .in_base
-.inc_base:
+is_space:
+    cmp byte [rdi], 9      ; '\t'(Tab)
+    je .return_true
+    cmp byte [rdi], 10     ; '\n'(Newline)
+    je .return_true
+    cmp byte [rdi], 11     ; '\v'(Vertical tab)
+    je .return_true
+    cmp byte [rdi], 12     ; '\f'(Form feed)
+    je .return_true
+    cmp byte [rdi], 13     ; '\r'(Carriage return)
+    je .return_true
+    cmp byte [rdi], 32     ; ' '(Space)
+    je .return_true
+.return_false:
+    xor rax, rax
+    ret
+.return_true:
+    mov rax, 1
+    ret
+
+check_base:
+    sub rsp, 256
+    mov rcx, 256
+    xor rax, rax
+    mov rdi, rsp
+    rep stosb
+    xor rcx, rcx            ; RCX = 0
+.loop:
+    movzx rax, byte [rsi + rcx]
+    cmp rax, 0
+    je .return_base_length
+    cmp rax, '-'                ; check for invalid character in base
+    je .return_error            ; if found, return -1 with errno
+    cmp rax, '+'                ; check for invalid character in base
+    je .return_error            ; if found, return -1 with errno
+    cmp byte [rsp + rax], 1     ; Check if this character was seen before
+    je .return_error
+    mov byte [rsp + rax], 1
     inc rcx
-.in_base:
-    mov dl, byte [rdi]            ; Load byte from [rdi] into DL
-    cmp byte [lbase + rcx], dl    ; Compare DL with [lbase + rcx]
-    je  .convert
-    cmp byte [ubase + rcx], dl
-    je  .convert
-    cmp rcx, rsi
-    jne .inc_base
-    jmp .early_ret
-.convert_dec:
-    cmp byte [rdi], '9'
-    jg  .check_l_hex
-    mov rdx, rax
-    movzx rax, byte [rdi]
-    sub rax, '0'
-    push    rax
-    mov rax, rdx
-    pop rdx
-    add rax, rdx
-    jmp .continue
-.convert_l_hex:
-    cmp byte [rdi], 'f'
-    jg  .check_u_hex
-    mov rdx, rax
-    movzx rax, byte [rdi]
-    sub rax, 'a'
-    add rax, 10
-    push    rax
-    mov rax, rdx
-    pop rdx
-    add rax, rdx
-    jmp .continue
-.convert_u_hex:
-    cmp byte [rdi], 'F'
-    jg  .continue
-    mov rdx, rax
-    movzx rax, byte [rdi]
-    sub rax, 'A'
-    add rax, 10
-    push    rax
-    mov rax, rdx
-    pop rdx
-    add rax, rdx
-    jmp .continue
-.convert:
-    mul rsi                 ; rax *= rsi
-.check_dec:
-    cmp byte [rdi], '0'
-    jge .convert_dec
-.check_l_hex:
-    cmp byte [rdi], 'a'
-    jge .convert_l_hex
-.check_u_hex:
-    cmp byte [rdi], 'A'
-    jge .convert_u_hex
-.early_ret:
-    mov rax, 0
+    jmp .loop
+.return_base_length:
+    mov r9, rcx
+    mov rax, rcx            ; save base length in RAX
+    jmp .return
+.return_error:
+    mov rax, -1             ; if error occured return 0
+.return:
+    add rsp, 256
+    ret                     ; return to caller
+
+handle_spaces:
+    jmp .loop
+.inc:
+    inc rdi
+.loop:
+    cmp byte [rdi], 9      ; '\t'(Tab)
+    je .inc
+    cmp byte [rdi], 10     ; '\n'(Newline)
+    je .inc
+    cmp byte [rdi], 11     ; '\v'(Vertical tab)
+    je .inc
+    cmp byte [rdi], 12     ; '\f'(Form feed)
+    je .inc
+    cmp byte [rdi], 13     ; '\r'(Carriage return)
+    je .inc
+    cmp byte [rdi], 32     ; ' '(Space)
+    je .inc
+    ret
+
+handle_signs:
+    jmp .loop
+.update_sign:
+    neg byte [sign]
+.inc:
+    inc rdi
+.loop:
+    cmp byte [rdi], '-'
+    je .update_sign
+    cmp byte [rdi], '+'
+    je .inc
+    ret
+
+get_index:
+    xor rax, rax
+.loop:
+    movzx r13, byte [rsi + rax]
+    cmp r13, 0
+    je .not_found
+    cmp r13b, byte [rdi]
+    je .return
+    inc rax
+    jmp .loop
+.not_found:
+    mov rax, -1
+.return:
+    ret
+
+handle_conversion:
+    xor rax, rax
+    jmp .loop
+.inc:
+    inc rdi
+.loop:
+    cmp byte [rdi], 0
+    je .return
+    push rax
+    call get_index
+    mov r8, rax
+    pop rax
+    test r8, r8
+    js .return
+    mul r9
+    add rax, r8
+    jmp .inc
+.return:
+    ret
+
+; int ft_atoi_base(char *str, char *base)
+; RDI = str (pointer to string to convert)
+; RSI = base (pointer to string that rapresent base)
+; RAX = return (numeric value of str converted in base)
+ft_atoi_base:
+    test rdi, rdi
+    jz .return_errno_efault
+    test rsi, rsi
+    jz .return_errno_efault
+    push rdi
+    call check_base
+    pop rdi
+    cmp rax, 2
+    jl .return_errno_efault
+
+    call handle_spaces
+    call handle_signs
+    call handle_conversion
+    movsx rbx, byte [sign]
+    mul rbx                     ; apply sign to return value
+    ret
+.return_errno_efault:
+    mov rax, 14                     ; error code (EFAULT)
+    push rax                        ; save error code
+    call __errno_location wrt ..plt ; get address of the `errno` variable
+    pop qword [rax]                 ; store error code in errno
+    mov rax, -1
     ret

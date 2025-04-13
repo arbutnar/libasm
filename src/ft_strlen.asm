@@ -1,29 +1,38 @@
-; size_t    ft_strlen(const char *s);
-; The strlen() function calculates the length of the string pointed to by s, excluding the terminating null byte ('\0').
-
+; ************************************************************************** ;
+;                                                                            ;
+;                                                        :::      ::::::::   ;
+;   ft_strlen.asm                                      :+:      :+:    :+:   ;
+;                                                    +:+ +:+         +:+     ;
+;   By: arbutnar <arbutnar@student.42.fr>          +#+  +:+       +#+        ;
+;                                                +#+#+#+#+#+   +#+           ;
+;   Created: 2025/03/29 10:09:44 by arbutnar          #+#    #+#             ;
+;   Updated: 2025/03/29 10:09:44 by arbutnar         ###   ########.fr       ;
+;                                                                            ;
+; ************************************************************************** ;
 
 section .text
     global ft_strlen
     extern __errno_location
 
-set_errno:
-    mov rax, 14             ; Error code (EFAULT)
-    call __errno_location wrt ..plt   ; Get address of errno variable
-    mov [rax], rax          ; Store error code in errno
-    mov rax, -1
-    ret
-
+; size_t    ft_strlen(const char *s)
+; RDI = s (pointer to source string)
+; RAX = return (length of s, excluding '\0', or -1 is s is NULL)
 ft_strlen:
-    test rdi, rdi           ; Check if destination (rdi) is NULL
-    jz set_errno
-    xor rcx, rcx            ; Clear counter register
-
-.loop:
-    cmp byte [rdi + rcx], 0 ; Check if the current byte is null
-    je .return              ; Returns if null terminator is found
-    inc rcx                 ; Increment counter
-    jmp .loop
-
+    test rdi, rdi           ; check if RDI is NULL
+    jz .set_errno_efault    ; if NULL, set EFAULT error
+    xor rax, rax            ; RAX = 0
+    jmp .loop_through
+.increment:
+    inc rax
+.loop_through:
+    cmp byte [rdi + rax], 0 ; check if the current byte is null
+    jne .increment          ; if not NULL, continue looping
 .return:
-    mov rax, rcx
-    ret                     ; Return lenght in rax
+    ret                     ; return lenght in RAX
+.set_errno_efault:
+    mov rax, 14                     ; error code (EFAULT)
+    push rax                        ; save error code
+    call __errno_location wrt ..plt ; get address of the `errno` variable
+    pop qword [rax]                 ; store error code in errno
+    mov rax, -1
+    ret                             ; return to caller
