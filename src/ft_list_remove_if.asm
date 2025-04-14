@@ -5,52 +5,65 @@ section .data
 
 section .text
 global ft_list_remove_if
-extern __errno_location, _free
+extern __errno_location, free
 
 ; void    ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)(), void (*free_fct)(void *))
 ; RDI = begin_list
 ; RSI = data_ref (data to compare)
 ; RDX = cmp (pointer to function that compares)
 ; RCX = free_fct (pointer to function that frees list element)
+; RBX = curr
 ft_list_remove_if:
-    test rdi, rdi
+    test rdi, rdi           ; check if **begin_list == NULL
     jz .set_errno_efault
-    test rdx, rdx
+    test rdx, rdx           ; check if *cmp == NULL
     jz .set_errno_efault
 
-    mov rbx, [rdi]                  ; RBX = *begin_list
+    mov rbx, [rdi]          ; RBX = *begin_list
 .loop:
-    test rbx, rbx
+    test rbx, rbx           ; check if RBX == NULL
     jz .return
+    push r13
     push rdi
-    mov rdi, [rbx]
-    call rdx                        ; cmp(RBX->data, data_ref)
+    push rsi
+    push rdx
+    push rcx
+    mov rdi, [rbx]          ; RDI = RBX->data
+    call rdx                ; RAX = cmp(RBX->data, data_ref)
+    pop rcx
+    pop rdx
+    pop rsi
     pop rdi
-    test rax, rax
-    jz .update_elements
+    pop r13
+
+    test rax, rax           ; check if RAX is zero
+    jnz .move_pointer
     mov r12, rbx
-    mov rbx, [rbx + 8]
-    jmp .loop
-.update_elements:
-    test rbx, [rdi]
-    jne .erase_element
-    mov [is_begin], byte 1
-.erase_element:
-    mov r13, [rbx + 8]
     push rdi
+    push rsi
+    push rdx
+    push rcx
     mov rdi, rbx
-    call _free
+    call free wrt ..plt
+    pop rcx
+    pop rdx
+    pop rsi
     pop rdi
-    cmp [is_begin], byte 1
+
+    mov rbx, r12
+    cmp rbx, [rdi]          ; RBX == *begin_list
     je .update_begin_list
-    jmp .update_inside_list
+    jmp .update_in_list
 .update_begin_list:
-    mov [rdi], r13
-    mov rbx, r13
+    mov [rdi], rbx
     jmp .loop
-.update_inside_list:
-    mov [r12 + 8], r13
-    mov rbx, r13
+.update_in_list:
+    mov r13, rbx
+    jmp .loop
+.move_pointer:
+    mov r13, rbx            ; R13 = RBX (current node)
+    mov rbx, [rbx + 8]      ; RBX = RBX->next
+    ret
     jmp .loop
 .set_errno_efault:
     mov rax, 14                     ; error code (EFAULT)

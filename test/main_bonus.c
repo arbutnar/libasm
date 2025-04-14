@@ -21,7 +21,7 @@ void    test_ft_list_push_front(t_list **head) {
     ft_list_push_front(head, "2");
     ft_list_push_front(head, "1");
     ft_list_push_front(head, "4");
-    ft_list_push_front(head, "1");
+    ft_list_push_front(head, "4");
     
     t_list  *tmp = *head;
     for (int i = 0; tmp; i++) {
@@ -44,7 +44,7 @@ void    test_ft_list_size(t_list  *head) {
 
 void    test_ft_list_remove_if(t_list  **head) {
     printf("\n-----TEST FT_LIST_REMOVE_IF------\n");
-    ft_list_remove_if(head, "1", ft_strcmp, free);
+    printf("%d\n", ft_list_remove_if(head, "1", ft_strcmp, free));
 
     t_list  *tmp = *head;
     for (int i = 0; tmp; i++) {
@@ -58,7 +58,7 @@ void    test_ft_list_remove_if(t_list  **head) {
 int main() {
     t_list  *head = NULL;
     
-    test_ft_atoi_base();
+    //test_ft_atoi_base();
     test_ft_list_push_front(&head);
     // test_ft_list_size(head);
     // test_ft_list_sort(&head);

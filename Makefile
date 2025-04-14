@@ -23,18 +23,12 @@ BONUS_OBJ		=	$(BONUS_SRC:.asm=.o)
 TEST_TARGET	=	test
 TEST_DIR	=	test
 
-# Compiler
-ASM 		=	nasm
-ASM_FLAG	=	-f elf64
-CC			=	gcc
-C_FLAG		=	-Wall -Wextra #-Werror -g
-
 all:	$(MAND_TARGET) $(BONUS_TARGET)
 
 # Compile assembly files to create object files
 %.o: %.asm
 	@echo "Assembling $<"
-	@$(ASM) $(ASM_FLAG) -o $@ $<
+	@nasm -f elf64 -o $@ $<
 
 # Create mandatory library by archiving object files
 $(MAND_TARGET): $(MAND_OBJ)
@@ -49,18 +43,16 @@ $(BONUS_TARGET): $(BONUS_OBJ)
 $(TEST_TARGET): $(MAND_TARGET) $(BONUS_TARGET)
 	@if [ -d $(TEST_DIR) ]; then \
 		echo "Compiling tests..."; \
-		$(CC) $(TEST_DIR)/main.c $(MAND_ARC) -o $(MAND_TARGET) $(C_FLAG); \
-		$(CC) $(TEST_DIR)/main_bonus.c $(BONUS_ARC) $(MAND_ARC) -o $(BONUS_TARGET) $(C_FLAG); \
+		gcc $(TEST_DIR)/main.c $(MAND_ARC) -o $(MAND_TARGET) -Wall -Wextra -Werror -g; \
+		gcc $(TEST_DIR)/main_bonus.c $(BONUS_ARC) $(MAND_ARC) -o $(BONUS_TARGET) -Wall -Wextra -Werror -g; \
 	else \
 		echo "Test folder doesn't exist."; \
 	fi
 
 clean:
-	@echo "Cleaning object files"
 	rm -f $(MAND_OBJ) $(BONUS_OBJ)
 
 fclean: clean
-	@echo "Removing compiled libraries"
 	rm -f $(MAND_TARGET) $(MAND_ARC) $(BONUS_TARGET) $(BONUS_ARC)
 
 re: fclean all
