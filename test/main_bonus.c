@@ -9,7 +9,7 @@ void    test_ft_atoi_base() {
     char    *str = "   -10";
     char    *base = "0123456789abcdef";
 
-    printf("\n-------TEST FT_ATOI_BASE---------\n");
+    printf("-------TEST FT_ATOI_BASE---------\n");
     printf("return  -->  %d\n", ft_atoi_base(str, base));
     printf("errno   -->  %d\n", errno);
     errno = 0;
@@ -19,7 +19,7 @@ void    test_ft_list_push_front(t_list **head, char **data_arr) {
     t_list  *tmp = NULL;
     char    *dup = NULL;
 
-    printf("\n-----TEST FT_LIST_PUSH_FRONT-----\n");
+    printf("-----TEST FT_LIST_PUSH_FRONT-----\n");
     for (int i = 0; data_arr[i]; i++) {
         dup = strdup(data_arr[i]);  // safely allocate memory
         ft_list_push_front(head, dup);
@@ -34,12 +34,14 @@ void    test_ft_list_push_front(t_list **head, char **data_arr) {
 }
 
 void    test_ft_list_size(t_list  *head) {
-    printf("\n--------TEST FT_LIST_SIZE--------\n");
-    printf("%d\n", ft_list_size(head));
+    printf("--------TEST FT_LIST_SIZE--------\n");
+    printf("return  -->  %d\n", ft_list_size(head));
+    printf("errno   -->  %d\n", errno);
+    errno = 0;
 }
 
 // void    test_ft_list_sort(t_list **head) {
-//     printf("\n--------TEST FT_LIST_SORT--------\n");
+//     printf("--------TEST FT_LIST_SORT--------\n");
 //     t_list *half = ft_list_sort(head, ft_strcmp);
 //     printf("head's data = %s\n", (char *) (*head)->data);
 //     printf("half's data = %s\n", (char *) half->data);
@@ -47,7 +49,7 @@ void    test_ft_list_size(t_list  *head) {
 
 void    test_ft_list_remove_if(t_list  **head) {
     t_list  *tmp = NULL;
-    printf("\n-----TEST FT_LIST_REMOVE_IF------\n");
+    printf("-----TEST FT_LIST_REMOVE_IF------\n");
     ft_list_remove_if(head, "1", ft_strcmp, free);
 
     tmp = *head;
@@ -65,7 +67,7 @@ int main() {
 
     test_ft_atoi_base();
     test_ft_list_push_front(&head, data_arr);
-    // test_ft_list_size(head);
+    test_ft_list_size(head);
     // test_ft_list_sort(&head);
     test_ft_list_remove_if(&head);
 

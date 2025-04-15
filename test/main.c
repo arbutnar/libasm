@@ -9,7 +9,7 @@ void    test_ft_strlen()
     /* buf == NULL --- Segmentation fault (core dumped) */
     char    *buf = "testing ft_strlen";
 
-    printf("\n--------TEST FT_STRLEN-------\n");
+    printf("--------TEST FT_STRLEN-------\n");
     printf("strlen      |  return  -->  %ld\n", strlen(buf));
     printf("            -\n");
     printf("ft_strlen   |  return  -->  %ld\n", ft_strlen(buf));
@@ -26,7 +26,7 @@ void    test_ft_strcpy()
     char    dest[dsize], ft_dest[dsize];
     char    *src = "testing ft_strcpy";
 
-    printf("\n--------TEST FT_STRCPY-------\n");
+    printf("--------TEST FT_STRCPY-------\n");
     char    *ret = strcpy(dest, src);
     printf("strcpy      |  dest    -->  %s\n", dest);
     printf("            |  return  -->  %s\n", ret);
@@ -43,7 +43,7 @@ void    test_ft_strcmp()
     char *s1 = "3testing strcmp";
     char *s2 = "2testing ft_strcmp";
 
-    printf("\n--------TEST FT_STRCMP-------\n");
+    printf("--------TEST FT_STRCMP-------\n");
     printf("strcmp      |  return  -->  %d\n", strcmp(s1, s2));
     printf("            -\n");
     printf("ft_strcmp   |  return  -->  %d\n", ft_strcmp(s1, s2));
@@ -58,7 +58,7 @@ void    test_ft_write()
     size_t  count = sizeof(buf);
     ssize_t ret = 0;
 
-    printf("\n--------TEST FT_WRITE--------\n");
+    printf("--------TEST FT_WRITE--------\n");
     write(1, "write       |  output  -->  ", 28);
     ret = write(fd, buf, count);
     printf("\n");
@@ -81,7 +81,7 @@ void    test_ft_read()
     char    *buf = NULL;
     size_t  count = 0;
 
-    printf("\n--------TEST FT_READ---------\n");
+    printf("--------TEST FT_READ---------\n");
     printf("read        |  return  -->  %ld\n", read(fd, buf, count));
     printf("            |  errno   -->  %d\n", errno);
     errno = 0;
@@ -99,7 +99,7 @@ void    test_ft_strdup()
     char        *ft_dest = NULL;
     const char  *src = "testing ft_strdup";
 
-    printf("\n--------TEST FT_STRDUP-------\n");
+    printf("--------TEST FT_STRDUP-------\n");
     printf("strdup      |  return  -->  %s\n", (dest = strdup(src)));
     printf("            -\n");
     printf("ft_strdup   |  return  -->  %s\n", (ft_dest = ft_strdup(src)));

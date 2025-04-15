@@ -11,21 +11,28 @@
 ; ************************************************************************** ;
 
 section .text
-    global ft_list_size
+global ft_list_size
+extern __errno_location
 
 ; int ft_list_size(t_list *begin_list)
 ; RDI = begin_list (head pointer)
 ; RAX = size of list (return)
 ft_list_size:
     test rdi, rdi
-    jz .return
-    jmp .loop_through
-.increment:
-    inc rax
-.loop_through:
-    cmp rdi, 0
-    je .return
-    mov rdi, [rdi + 8]
-    jmp .increment
+    jz .set_errno_efault
+
+    xor rax, rax
+.loop:
+    inc     rax                 ; increment size
+    mov     rdi, [rdi + 8]      ; move to next node (rdi = rdi->next)
+    test    rdi, rdi
+    jnz     .loop               ; if not null, continue
+    ret
+.set_errno_efault:
+    mov rax, 14                     ; error code (EFAULT)
+    push rax                        ; save error code
+    call __errno_location wrt ..plt ; get address of the `errno` variable
+    pop qword [rax]                 ; store error code in errno
+    mov rax, -1
 .return:
     ret
