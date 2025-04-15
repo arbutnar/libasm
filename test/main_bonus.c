@@ -6,13 +6,36 @@
 #include <errno.h>
 
 void    test_ft_atoi_base() {
-    char    *str = "   -10";
-    char    *base = "0123456789abcdef";
-
-    printf("-------TEST FT_ATOI_BASE---------\n");
-    printf("return  -->  %d\n", ft_atoi_base(str, base));
-    printf("errno   -->  %d\n", errno);
+    printf("----------TEST FT_ATOI_BASE----------\n");
+    printf("INVALID------------------------------\n");
+    printf("str == NULL      |  return  -->  %d\n", ft_atoi_base(NULL, "0123456789"));
+    printf("                 |  errno   -->  %d\n", errno);
+    printf("                 -\n");
     errno = 0;
+    printf("base == NULL     |  return  -->  %d\n", ft_atoi_base("1", NULL));
+    printf("                 |  errno   -->  %d\n", errno);
+    printf("                 -\n");
+    errno = 0;
+    printf("base len == 0    |  return  -->  %d\n", ft_atoi_base("10", ""));
+    printf("                 |  errno   -->  %d\n", errno);
+    printf("                 -\n");
+    errno = 0;
+    printf("base len == 1    |  return  -->  %d\n", ft_atoi_base("10", "1"));
+    printf("                 |  errno   -->  %d\n", errno);
+    printf("                 -\n");
+    errno = 0;
+    printf("base have dupes  |  return  -->  %d\n", ft_atoi_base("10", "010"));
+    printf("                 |  errno   -->  %d\n", errno);
+    printf("                 -\n");
+    errno = 0;
+    printf("base have + -    |  return  -->  %d\n", ft_atoi_base("10", "+012"));
+    printf("                 |  errno   -->  %d\n", errno);
+    printf("                 -\n");
+    errno = 0;
+    printf("base have + -    |  return  -->  %d\n", ft_atoi_base("  ---+--+1234ab567", "0123456789"));
+    printf("                 |  errno   -->  %d\n", errno);
+    errno = 0;
+    printf("VALID--------------------------------\n");
 }
 
 void    test_ft_list_push_front(t_list **head, char **data_arr) {
