@@ -43,8 +43,8 @@ $(BONUS_TARGET): $(BONUS_OBJ)
 $(TEST_TARGET): $(MAND_TARGET) $(BONUS_TARGET)
 	@if [ -d $(TEST_DIR) ]; then \
 		echo "Compiling tests..."; \
-		gcc $(TEST_DIR)/main.c $(MAND_ARC) -o $(MAND_TARGET) -Wall -Wextra -Werror -g; \
-		gcc $(TEST_DIR)/main_bonus.c $(BONUS_ARC) $(MAND_ARC) -o $(BONUS_TARGET) -Wall -Wextra -Werror -g; \
+		gcc $(TEST_DIR)/main.c $(MAND_ARC) -o $(MAND_TARGET) -Wall -Wextra -g; \
+		gcc $(TEST_DIR)/main_bonus.c $(BONUS_ARC) $(MAND_ARC) -o $(BONUS_TARGET) -Wall -Wextra -g; \
 	else \
 		echo "Test folder doesn't exist."; \
 	fi
