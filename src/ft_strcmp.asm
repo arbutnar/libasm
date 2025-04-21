@@ -29,8 +29,8 @@ ft_strcmp:
     inc rcx                     ; increment counter
 .loop_through:
     mov al, byte [rdi + rcx]
-    mov bl, byte [rsi + rcx]
-    cmp al, bl
+    mov dl, byte [rsi + rcx]
+    cmp al, dl
     jne .return_non_eq
     cmp al, 0
     jne .increment
@@ -39,8 +39,8 @@ ft_strcmp:
     ret                     ; return to caller
 .return_non_eq:
     movzx rax, al           ; zero-extend AL to RAX
-    movzx rbx, bl           ; zero-extend BL to RBX
-    sub rax, rbx            ; calculate ASCII value difference
+    movzx rdx, dl           ; zero-extend BL to RBX
+    sub rax, rdx            ; calculate ASCII value difference
     ret                     ; return to caller
 .set_errno_efault:
     mov rax, 14                     ; error code (EFAULT)

@@ -70,6 +70,14 @@ void    test_ft_list_size(t_list  *head) {
 //     printf("half's data = %s\n", (char *) half->data);
 // }
 
+int tmp_strcmp(char *s1, char *s2) {
+    printf("ciaoo\n");
+    printf("s1 = %s\n", s1);
+    printf("s2 = %s\n", s2);
+
+    return 1;
+}
+
 void    test_ft_list_remove_if(t_list  **head) {
     t_list  *tmp = NULL;
     printf("-----TEST FT_LIST_REMOVE_IF------\n");
