@@ -20,48 +20,6 @@ int ft_list_size(t_list *begin_list) {
     return (i);
 }
 
-t_list  *split_list(t_list *begin_list) {
-    t_list *half = begin_list;
-    t_list *end = begin_list;
-
-    while (end && end->next && end->next->next) {
-        half = half->next;
-        end = end->next->next;
-    }
-    end = half->next;
-    half->next = NULL;
-    return (end);
-}
-
-t_list  *merge_lists(t_list *begin_list, t_list *half_list, int (*cmp)()) {
-    t_list  *res;
-
-    if (!begin_list) return (half_list);
-    if (!half_list) return (begin_list);
-
-    if (cmp(begin_list->data, half_list->data)) {
-        res = half_list;
-        res->next = merge_lists(begin_list, half_list->next, cmp);
-    } else {
-        res = begin_list;
-        res->next = merge_lists(begin_list->next, half_list, cmp);
-    }
-    return (res);
-}
-
-// void    ft_list_sort(t_list **begin_list, int (*cmp)()) {
-//     t_list  *half_list = split_list(*begin_list);
-
-//     if ((*begin_list)->next) ft_list_sort(begin_list, cmp);
-//     if (half_list->next) ft_list_sort(&half_list, cmp);
-
-//     t_list  *tmp = merge_lists(*begin_list, half_list, cmp);
-//     for (int i = 0; tmp; i++) {
-//         printf("\nlist[%d]'s data = %s\n", i, (char *)tmp->data);
-//         tmp = tmp->next;
-//     }
-// }
-
 void    ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)(), void (*free_fct)(void *)) {
     t_list  *temp = NULL;
     t_list  *prev = NULL;
@@ -84,6 +42,44 @@ void    ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)(), voi
     }
 }
 
+void ft_print_list(t_list *head) {
+    t_list *tmp = head;
+
+    for (int i = 0; tmp; i++) {
+       printf("list[%d]'s data = %s\n", i, (char *)tmp->data);
+       tmp = tmp->next;
+    }
+}
+
+void    ft_list_sort(t_list **begin_list, int (*cmp)()) {
+    t_list  *prev;
+    t_list  *curr;
+    t_list  *next;
+    int     sorted = 0;
+
+    while (!sorted) {
+        sorted = 1;
+        prev = NULL;
+        curr = *begin_list;
+        next = curr->next;
+        while (next) {
+            if (cmp(curr->data, next->data) > 0) {
+                sorted = 0;
+                curr->next = next->next;
+                next->next = curr;
+                curr = next;
+                if (prev)
+                    prev->next = curr;
+                else
+                    *begin_list = curr;
+            }
+            prev = curr;
+            curr = curr->next;
+            next = curr->next;
+        }
+    }
+}
+
 int main() {
     t_list  *head = NULL;
     t_list  *tmp = NULL;
@@ -91,9 +87,14 @@ int main() {
     // 1 9 4 8 5 3 7 2 6
     ft_list_push_front(&head, "1");
     ft_list_push_front(&head, "2");
-    ft_list_push_front(&head, "1");
+    ft_list_push_front(&head, "0");
     ft_list_push_front(&head, "3");
     ft_list_push_front(&head, "1");
+    ft_list_push_front(&head, "9");
+    ft_list_push_front(&head, "4");
+    ft_list_push_front(&head, "7");
+    ft_list_push_front(&head, "0");
+    ft_list_push_front(&head, "8");
 
     tmp = head;
 
@@ -104,8 +105,8 @@ int main() {
     }
     printf("------------------\n");
 
-    //ft_list_sort(&head, ft_strcmp);
-    ft_list_remove_if(&head, NULL, ft_strcmp, free);
+    ft_list_sort(&head, ft_strcmp);
+    // ft_list_remove_if(&head, NULL, ft_strcmp, free);
     for (int i = 0; head; i++) {
         printf("list[%d]'s data = %s\n", i, (char *) head->data);
         head = head->next;

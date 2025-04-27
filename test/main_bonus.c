@@ -5,6 +5,15 @@
 #include <unistd.h>
 #include <errno.h>
 
+void ft_print_list(t_list *head) {
+    t_list *tmp = head;
+
+    for (int i = 0; tmp; i++) {
+       printf("list[%d]'s data = %s\n", i, (char *)tmp->data);
+       tmp = tmp->next;
+    }
+}
+
 void    test_ft_atoi_base() {
     printf("----------TEST FT_ATOI_BASE----------\n");
     printf("INVALID------------------------------\n");
@@ -39,19 +48,14 @@ void    test_ft_atoi_base() {
 }
 
 void    test_ft_list_push_front(t_list **head, char **data_arr) {
-    t_list  *tmp = NULL;
     char    *dup = NULL;
 
     printf("-----TEST FT_LIST_PUSH_FRONT-----\n");
     for (int i = 0; data_arr[i]; i++) {
-        dup = strdup(data_arr[i]);  // safely allocate memory
+        dup = strdup(data_arr[i]);
         ft_list_push_front(head, dup);
     }
-    tmp = *head;
-    for (int i = 0; tmp; i++) {
-        printf("list[%d]'s data = %s\n", i, (char *) tmp->data);
-        tmp = tmp->next;
-    }
+    ft_print_list(*head);
     printf("errno   -->  %d\n", errno);
     errno = 0;
 }
@@ -63,25 +67,22 @@ void    test_ft_list_size(t_list  *head) {
     errno = 0;
 }
 
-// void    test_ft_list_sort(t_list **head) {
-//     printf("--------TEST FT_LIST_SORT--------\n");
-//     t_list *half = ft_list_sort(head, ft_strcmp);
-//     printf("head's data = %s\n", (char *) (*head)->data);
-//     printf("half's data = %s\n", (char *) half->data);
-// }
-
 int tmp_strcmp(char *s1, char *s2) {
-    printf("ciaoo\n");
-    printf("s1 = %s\n", s1);
-    printf("s2 = %s\n", s2);
+    return (*s1 - *s2);
+}
 
-    return 1;
+void    test_ft_list_sort(t_list **head) {
+    printf("--------TEST FT_LIST_SORT--------\n");
+    ft_list_sort(head, tmp_strcmp);
+    ft_print_list(*head);
+    printf("errno   -->  %d\n", errno);
+    errno = 0;
 }
 
 void    test_ft_list_remove_if(t_list  **head) {
     t_list  *tmp = NULL;
     printf("-----TEST FT_LIST_REMOVE_IF------\n");
-    ft_list_remove_if(head, "1", ft_strcmp, free);
+    ft_list_remove_if(head, "1", tmp_strcmp, free);
 
     tmp = *head;
     for (int i = 0; tmp; i++) {
@@ -94,13 +95,13 @@ void    test_ft_list_remove_if(t_list  **head) {
 
 int main() {
     t_list  *head = NULL;
-    char    *data_arr[] = { "1", "2", "1", "3", "1", NULL };
+    char    *char_arr[] = { "1", "2", "0", "3", "1", "9", "4", "7", "9", "6", NULL };
 
     test_ft_atoi_base();
-    test_ft_list_push_front(&head, data_arr);
+    test_ft_list_push_front(&head, char_arr);
     test_ft_list_size(head);
-    // test_ft_list_sort(&head);
-    test_ft_list_remove_if(&head);
+    test_ft_list_sort(&head);
+    // test_ft_list_remove_if(&head);
 
     return 0;
 }

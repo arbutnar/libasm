@@ -1,6 +1,0 @@
-{
-    "files.associations": {
-        "libasm.h": "c",
-        "unistd.h": "c"
-    }
-}

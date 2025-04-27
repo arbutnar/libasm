@@ -90,7 +90,6 @@ ft_list_remove_if:
     push rax                        ; save error code
     call __errno_location wrt ..plt ; get address of the `errno` variable
     pop qword [rax]                 ; store error code in errno
-    mov rax, -1
 .return:
     mov rsp, rbp
     pop rbp
