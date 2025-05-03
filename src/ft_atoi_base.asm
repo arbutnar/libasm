@@ -91,6 +91,7 @@ handle_spaces:
     ret
 
 handle_signs:
+    mov [sign], byte 1
     jmp .loop
 .update_sign:
     neg byte [sign]

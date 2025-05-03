@@ -5,6 +5,34 @@
 #include <unistd.h>
 #include <errno.h>
 
+void    test_ft_atoi_base() {
+    struct {
+        char    *str;
+        char    *base;
+        char    *description;
+    } cases[] = {
+        {NULL, "0123456789", "str == NULL"},
+        {"1", NULL, "base == NULL"},
+        {"10", "", "base len == 0"},
+        {"10", "1", "base len == 1"},
+        {"10", "010", "base have dupes"},
+        {"10", "+012", "base have + -"},
+        {"9", "012", "*str ∌ base"},
+        {"4422", "0123456789", "base 10"},
+        {"10", "0123456789abcdef", "base 16"},
+        {"+-----+2000", "0123456789", "neg str"},
+        {"       0011", "01", "spaces"},
+    };
+
+    printf("\33[0;32mTEST FT_ATOI_BASE\33[0m\n");
+    for (unsigned int i = 0; i < (sizeof(cases)/sizeof(*cases)); i++) {
+        printf("\33[0;33m[\"%s\", \"%s\"] %s:\n\33[0m", cases[i].str, cases[i].base, cases[i].description);
+        printf("return  -->  %d\n", ft_atoi_base(cases[i].str, cases[i].base));
+        printf("errno   -->  %d\n", errno);
+        errno = 0;
+    }
+}
+
 void ft_print_list(t_list *head) {
     t_list *tmp = head;
 
@@ -14,60 +42,20 @@ void ft_print_list(t_list *head) {
     }
 }
 
-void    test_ft_atoi_base() {
-    printf("----------TEST FT_ATOI_BASE----------\n");
-    printf("INVALID------------------------------\n");
-    printf("str == NULL      |  return  -->  %d\n", ft_atoi_base(NULL, "0123456789"));
-    printf("                 |  errno   -->  %d\n", errno);
-    printf("                 -\n");
-    errno = 0;
-    printf("base == NULL     |  return  -->  %d\n", ft_atoi_base("1", NULL));
-    printf("                 |  errno   -->  %d\n", errno);
-    printf("                 -\n");
-    errno = 0;
-    printf("base len == 0    |  return  -->  %d\n", ft_atoi_base("10", ""));
-    printf("                 |  errno   -->  %d\n", errno);
-    printf("                 -\n");
-    errno = 0;
-    printf("base len == 1    |  return  -->  %d\n", ft_atoi_base("10", "1"));
-    printf("                 |  errno   -->  %d\n", errno);
-    printf("                 -\n");
-    errno = 0;
-    printf("base have dupes  |  return  -->  %d\n", ft_atoi_base("10", "010"));
-    printf("                 |  errno   -->  %d\n", errno);
-    printf("                 -\n");
-    errno = 0;
-    printf("base have + -    |  return  -->  %d\n", ft_atoi_base("10", "+012"));
-    printf("                 |  errno   -->  %d\n", errno);
-    printf("                 -\n");
-    errno = 0;
-    printf("VALID--------------------------------\n");
-    printf("base 10          |  return  -->  %d\n", ft_atoi_base("  ---+--+1234ab567", "0123456789"));
-    printf("                 |  errno   -->  %d\n", errno);
-    errno = 0;
-    printf("base 10          |  return  -->  %d\n", ft_atoi_base("1234ab567", "0123456789abcdef"));
-    printf("                 |  errno   -->  %d\n", errno);
-    errno = 0;
-}
-
 void    test_ft_list_push_front(t_list **head, char **data_arr) {
     char    *dup = NULL;
 
-    printf("-----TEST FT_LIST_PUSH_FRONT-----\n");
+    printf("\33[0;32mTEST FT_LIST_PUSH_FRONT\33[0m\n");
     for (int i = 0; data_arr[i]; i++) {
         dup = strdup(data_arr[i]);
         ft_list_push_front(head, dup);
     }
     ft_print_list(*head);
-    printf("errno   -->  %d\n", errno);
-    errno = 0;
 }
 
 void    test_ft_list_size(t_list  *head) {
-    printf("--------TEST FT_LIST_SIZE--------\n");
+    printf("\33[0;32mTEST FT_LIST_SIZE\33[0m\n");
     printf("return  -->  %d\n", ft_list_size(head));
-    printf("errno   -->  %d\n", errno);
-    errno = 0;
 }
 
 int tmp_strcmp(char *s1, char *s2) {
@@ -75,25 +63,15 @@ int tmp_strcmp(char *s1, char *s2) {
 }
 
 void    test_ft_list_sort(t_list **head) {
-    printf("--------TEST FT_LIST_SORT--------\n");
+    printf("\33[0;32mTEST FT_LIST_SORT\33[0m\n");
     ft_list_sort(head, tmp_strcmp);
     ft_print_list(*head);
-    printf("errno   -->  %d\n", errno);
-    errno = 0;
 }
 
 void    test_ft_list_remove_if(t_list  **head) {
-    t_list  *tmp = NULL;
-    printf("-----TEST FT_LIST_REMOVE_IF------\n");
+    printf("\33[0;32mTEST FT_LIST_REMOVE_IF\33[0m\n");
     ft_list_remove_if(head, "1", tmp_strcmp, free);
-
-    tmp = *head;
-    for (int i = 0; tmp; i++) {
-        printf("list[%d]'s data = %s\n", i, (char *) tmp->data);
-        tmp = tmp->next;
-    }
-    printf("errno   -->  %d\n", errno);
-    errno = 0;
+    ft_print_list(*head);
 }
 
 int main() {

@@ -21,7 +21,7 @@ char *descriptions[] = {
 };
 
 void test_ft_strlen() {
-    printf("\33[0;32mTEST FT_STRLEN----------------\n\33[0m");
+    printf("\33[0;32mTEST FT_STRLEN\n\33[0m");
     for (unsigned int i = 0; i < (sizeof(test_cases)/sizeof(*test_cases)); i++) {
         char *str = test_cases[i];
         printf("\33[0;33m[\"%s\"] %s:\n\33[0m", test_cases[i], descriptions[i]);
@@ -31,7 +31,7 @@ void test_ft_strlen() {
 }
 
 void    test_ft_strcpy() {
-    printf("\n\33[0;32mTEST FT_STRCPY----------------\n\33[0m");
+    printf("\n\33[0;32mTEST FT_STRCPY\n\33[0m");
     for (unsigned int i = 0; i < (sizeof(test_cases)/sizeof(*test_cases)); i++) {
         char dest[strlen(test_cases[i])];
         char *src = test_cases[i];
@@ -46,7 +46,7 @@ void    test_ft_strcpy() {
 }
 
 void    test_ft_strcmp() {
-    printf("\n\33[0;32mTEST FT_STRCMP----------------\n\33[0m");
+    printf("\n\33[0;32mTEST FT_STRCMP\n\33[0m");
     struct {
         char    *s1;
         char    *s2;
@@ -72,7 +72,7 @@ void    test_ft_write() {
     int     fds[2];
     pipe(fds);
 
-    printf("\n\33[0;32mTEST FT_WRITE------------------\n\33[0m");
+    printf("\n\33[0;32mTEST FT_WRITE\n\33[0m");
     // fd = -1; count = 10;
     printf("\33[0;33m[-1] Invalid fd:\n\33[0m");
     printf("write       |  return  -->  %ld\n", write(-1, input, 10));
@@ -119,7 +119,7 @@ void    test_ft_read() {
     int fd = fileno(ft);
     write(fd, input, input_len);
 
-    printf("\n\33[0;32mTEST FT_READ------------------\n\33[0m");
+    printf("\n\33[0;32mTEST FT_READ\n\33[0m");
     // fd = -1; count = 10;
     printf("\33[0;33m[-1] Invalid fd:\n\33[0m");
     printf("read        |  return  -->  %ld\n", read(-1, input, 10));
@@ -157,7 +157,7 @@ void    test_ft_read() {
 }
 
 void    test_ft_strdup() {
-    printf("\n\33[0;32mTEST FT_STRDUP----------------\n\33[0m");
+    printf("\n\33[0;32mTEST FT_STRDUP\n\33[0m");
     for (unsigned int i = 0; i < sizeof(test_cases)/sizeof(*test_cases); i++) {
         char *str = test_cases[i];
         printf("\33[0;33m[\"%s\"] %s:\n\33[0m", test_cases[i], descriptions[i]);
