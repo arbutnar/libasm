@@ -40,7 +40,7 @@ $(BONUS_TARGET): $(BONUS_OBJ)
 	@echo "Creating $(BONUS_ARC)"
 	@ar rcs $(BONUS_ARC) $^
 
-$(TEST_TARGET): $(MAND_TARGET) $(BONUS_TARGET)
+$(TEST_TARGET): $(MAND_TARGET) $(BONUS_TARGET) $(TEST_DIR)/main.c $(TEST_DIR)/main_bonus.c
 	@if [ -d $(TEST_DIR) ]; then \
 		echo "Compiling tests..."; \
 		gcc $(TEST_DIR)/main.c $(MAND_ARC) -o $(MAND_TARGET) -Wall -Wextra -g; \

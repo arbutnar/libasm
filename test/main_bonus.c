@@ -41,10 +41,13 @@ void    test_ft_atoi_base() {
     printf("                 |  errno   -->  %d\n", errno);
     printf("                 -\n");
     errno = 0;
-    printf("base have + -    |  return  -->  %d\n", ft_atoi_base("  ---+--+1234ab567", "0123456789"));
+    printf("VALID--------------------------------\n");
+    printf("base 10          |  return  -->  %d\n", ft_atoi_base("  ---+--+1234ab567", "0123456789"));
     printf("                 |  errno   -->  %d\n", errno);
     errno = 0;
-    printf("VALID--------------------------------\n");
+    printf("base 10          |  return  -->  %d\n", ft_atoi_base("1234ab567", "0123456789abcdef"));
+    printf("                 |  errno   -->  %d\n", errno);
+    errno = 0;
 }
 
 void    test_ft_list_push_front(t_list **head, char **data_arr) {
@@ -101,7 +104,7 @@ int main() {
     test_ft_list_push_front(&head, char_arr);
     test_ft_list_size(head);
     test_ft_list_sort(&head);
-    // test_ft_list_remove_if(&head);
+    test_ft_list_remove_if(&head);
 
     return 0;
 }

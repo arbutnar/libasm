@@ -160,9 +160,7 @@ ft_atoi_base:
     mul rbx                     ; apply sign to return value
     ret
 .return_errno_efault:
-    mov rax, 14                     ; error code (EFAULT)
-    push rax                        ; save error code
-    call __errno_location wrt ..plt ; get address of the `errno` variable
-    pop qword [rax]                 ; store error code in errno
+    call __errno_location wrt ..plt
+    mov qword [rax], 14
     mov rax, -1
     ret

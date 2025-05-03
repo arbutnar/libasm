@@ -27,12 +27,10 @@ ft_strlen:
 .loop_through:
     cmp byte [rdi + rax], 0 ; check if the current byte is null
     jne .increment          ; if not NULL, continue looping
+    jmp .return
+.set_errno_efault:
+    call __errno_location wrt ..plt ; get address of the `errno` variable
+    mov qword [rax], 14             ; store error code in errno
+    mov rax, 0
 .return:
     ret                     ; return lenght in RAX
-.set_errno_efault:
-    mov rax, 14                     ; error code (EFAULT)
-    push rax                        ; save error code
-    call __errno_location wrt ..plt ; get address of the `errno` variable
-    pop qword [rax]                 ; store error code in errno
-    mov rax, -1
-    ret                             ; return to caller
