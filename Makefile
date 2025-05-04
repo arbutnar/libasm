@@ -1,4 +1,6 @@
-# Mandatory archived library
+CC	= gcc
+FLG	= -Wall -Wextra -Werror
+
 MAND_TARGET	=	mandatory
 MAND_ARC	=	libasm.a
 MAND_SRC	=	src/ft_write.asm \
@@ -9,7 +11,6 @@ MAND_SRC	=	src/ft_write.asm \
 				src/ft_strdup.asm
 MAND_OBJ	=	$(MAND_SRC:.asm=.o)
 
-# Bonus archived library
 BONUS_TARGET	=	bonus
 BONUS_ARC		=	libasm_bonus.a
 BONUS_SRC		=	src/ft_atoi_base.asm \
@@ -19,7 +20,6 @@ BONUS_SRC		=	src/ft_atoi_base.asm \
 					src/ft_list_remove_if.asm
 BONUS_OBJ		=	$(BONUS_SRC:.asm=.o)
 
-# Test library
 TEST_TARGET	=	test
 TEST_DIR	=	test
 
@@ -43,8 +43,8 @@ $(BONUS_TARGET): $(BONUS_OBJ)
 $(TEST_TARGET): $(MAND_TARGET) $(BONUS_TARGET) $(TEST_DIR)/main.c $(TEST_DIR)/main_bonus.c
 	@if [ -d $(TEST_DIR) ]; then \
 		echo "Compiling tests..."; \
-		gcc $(TEST_DIR)/main.c $(MAND_ARC) -o $(MAND_TARGET) -Wall -Wextra -g; \
-		gcc $(TEST_DIR)/main_bonus.c $(BONUS_ARC) $(MAND_ARC) -o $(BONUS_TARGET) -Wall -Wextra -g; \
+		gcc $(TEST_DIR)/main.c $(MAND_ARC) -o $(MAND_TARGET) $(FLG); \
+		gcc $(TEST_DIR)/main_bonus.c $(BONUS_ARC) $(MAND_ARC) -o $(BONUS_TARGET) $(FLG); \
 	else \
 		echo "Test folder doesn't exist."; \
 	fi

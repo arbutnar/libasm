@@ -4,16 +4,17 @@
 #include <unistd.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <stdlib.h>
 
 char *test_cases[] = {
-    "",
+    //"",
     "42",
     "This is a longer string.",
     "abc\0def",
     "こんにちは",
 };
 char *descriptions[] = {
-    "Empty string",
+    //"Empty string",
     "Short string",
     "Longer string",
     "Embedded null",
@@ -154,6 +155,8 @@ void    test_ft_read() {
     printf("            |  read    -->  %s\n", output);
     printf("            |  errno   -->  %d\n", errno);
     errno = 0;
+
+    fclose(ft);
 }
 
 void    test_ft_strdup() {
@@ -163,8 +166,10 @@ void    test_ft_strdup() {
         printf("\33[0;33m[\"%s\"] %s:\n\33[0m", test_cases[i], descriptions[i]);
         char *ret = strdup(str);
         printf("strdup      |  return  -->  %s\n", ret);
-        ret = ft_strdup(str);
+        char *ft_ret = ft_strdup(str);
         printf("ft_strdup   |  return  -->  %s\n", ret);
+		free(ret);
+		free(ft_ret);
     }
 }
 

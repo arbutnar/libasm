@@ -42,6 +42,17 @@ void ft_print_list(t_list *head) {
     }
 }
 
+void ft_free_list(t_list *head) {
+    t_list *tmp;
+
+    while (head) {
+        tmp = head->next;
+        free(head->data);
+        free(head);
+        head = tmp;
+    }
+}
+
 void    test_ft_list_push_front(t_list **head, char **data_arr) {
     char    *dup = NULL;
 
@@ -83,6 +94,8 @@ int main() {
     test_ft_list_size(head);
     test_ft_list_sort(&head);
     test_ft_list_remove_if(&head);
+
+    ft_free_list(head);
 
     return 0;
 }
